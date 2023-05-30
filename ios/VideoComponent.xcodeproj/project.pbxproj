@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5E555C0D2413F4C50049A1A2 /* VideoComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* VideoComponent.m */; };
-		F4FF95D7245B92E800C19C63 /*  VideoComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  VideoComponent.swift */; };
+		BF8373A92A259CAC00F2D71E /* VideoComponentViewManager2.m in Sources */ = {isa = PBXBuildFile; fileRef = BF8373A82A259CAC00F2D71E /* VideoComponentViewManager2.m */; };
+		BF8373AB2A259CDD00F2D71E /* VideoComponentViewManager2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8373AA2A259CDD00F2D71E /* VideoComponentViewManager2.swift */; };
+		BF8373B12A259D8900F2D71E /* VideoController2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF8373B02A259D8900F2D71E /* VideoController2.swift */; };
+		F4FF95D7245B92E800C19C63 /* VideoComponent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* VideoComponent.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,6 +28,9 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libVideoComponent.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libVideoComponent.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* VideoComponent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoComponent.m; sourceTree = "<group>"; };
+		BF8373A82A259CAC00F2D71E /* VideoComponentViewManager2.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoComponentViewManager2.m; sourceTree = "<group>"; };
+		BF8373AA2A259CDD00F2D71E /* VideoComponentViewManager2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoComponentViewManager2.swift; sourceTree = "<group>"; };
+		BF8373B02A259D8900F2D71E /* VideoController2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoController2.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* VideoComponent-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VideoComponent-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* VideoComponent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoComponent.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -52,6 +57,9 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				BF8373A82A259CAC00F2D71E /* VideoComponentViewManager2.m */,
+				BF8373AA2A259CDD00F2D71E /* VideoComponentViewManager2.swift */,
+				BF8373B02A259D8900F2D71E /* VideoController2.swift */,
 				F4FF95D6245B92E800C19C63 /* VideoComponent.swift */,
 				B3E7B5891CC2AC0600A0062D /* VideoComponent.m */,
 				F4FF95D5245B92E700C19C63 /* VideoComponent-Bridging-Header.h */,
@@ -117,7 +125,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F4FF95D7245B92E800C19C63 /* VideoComponent.swift in Sources */,
-				B3E7B58A1CC2AC0600A0062D /* VideoComponent.m in Sources */,
+				BF8373AB2A259CDD00F2D71E /* VideoComponentViewManager2.swift in Sources */,
+				BF8373B12A259D8900F2D71E /* VideoController2.swift in Sources */,
+				BF8373A92A259CAC00F2D71E /* VideoComponentViewManager2.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -168,7 +178,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -212,7 +222,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
