@@ -14,6 +14,7 @@ const LINKING_ERROR =
 type VideoComponentProps = {
   color: string;
   style: ViewStyle;
+  videoUrl: string
 };
 
 const ComponentName = 'VideoComponentView';

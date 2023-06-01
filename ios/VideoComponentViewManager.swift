@@ -1,21 +1,16 @@
-//
-//  VideoComponentViewManager2.swift
-//  VideoComponent
-//
-//  Created by Nad on 29/5/23.
-//  Copyright © 2023 Facebook. All rights reserved.
-//
 
 import Foundation
+import UIKit
+import AVFoundation
+import AVKit
+
 
 @objc(VideoComponentViewManager)
 class VideoComponentViewManager: RCTViewManager {
 
   override func view() -> (VideoComponentView) {
-    let videoController = Sosem()
-    videoController.setVideoUrl(url: "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4?_=1")
     let video = VideoComponentView()
-      return videoController.view as! VideoComponentView
+    return video
   }
 
   @objc override static func requiresMainQueueSetup() -> Bool {
@@ -30,6 +25,19 @@ class VideoComponentView : UIView {
       self.backgroundColor = hexStringToUIColor(hexColor: color)
     }
   }
+
+  var _urlVideo  : String = ""
+
+  @objc var source: NSString = "" {
+    didSet {
+      _urlVideo = source as String
+    }
+  }
+
+
+
+
+  weak var viewController: UIViewController?
 
   func hexStringToUIColor(hexColor: String) -> UIColor {
     let stringScanner = Scanner(string: hexColor)
@@ -50,35 +58,57 @@ class VideoComponentView : UIView {
   override init(frame: CGRect) {
         
         super.init(frame: UIScreen.main.bounds)
-        let label = UILabel()
-        label.bounds = self.bounds
-        label.center = CGPoint(x: self.frame.size.width  / 2,
-                               y: self.frame.size.height / 2)
-        label.textAlignment = .center
-        label.text = "I'm a test label"
-
-        self.addSubview(label)
         
     }
-  required init?(coder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
+    required init?(coder: NSCoder) {
+      fatalError("init(coder:) has not been implemented")
+    }
 
-  func onClose () {
+    func onClose () {
 
-  }
+    }
 
-  /*
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        if viewController == nil {
+            embed()
+        } else {
+            viewController?.view.frame = bounds
+        }
+    }
 
-  func setupVideo() {
-  
-    self.addSubview(videoController)
-
-  }
-  */
+    private func embed () {
+      guard
+            let parentVC = parentViewController else {
+            return
+      }
+      
+      if(_urlVideo.count > 0){
+        let currentViewController = VideoViewController()
+        currentViewController.setVideoUrl(url:_urlVideo)
+        parentVC.addChild(currentViewController)
+        addSubview(currentViewController.view)
+        currentViewController.view.frame = bounds
+        self.viewController = currentViewController
+      }
+      
+    }
 }
 
-class Sosem : UIViewController {
+extension UIView {
+  var parentViewController: UIViewController? {
+        var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
+    }
+}
+
+class VideoViewController : UIViewController {
     
     private var open : Bool = false
    
@@ -93,20 +123,19 @@ class Sosem : UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.black
-      
+
         guard let url = URL(string:videoUrl ?? "") else { return }
         
-        video = VideoController(viewController: self, url: url, onClose: self.onClose )
-        // Do any additional setup after loading the view.
-        
+        video = VideoController()
+        video?.setupValues(viewController: self, url: url, onClose: self.onClose)
+        self.view.addSubview(video!)
+      
     }
     
     
     override func viewDidAppear(_ animated: Bool) {
-        /*
         super.viewDidAppear(animated)
         video?.play()
-         */
     }
     
     func setVideoUrl (url : String) {
@@ -114,3 +143,67 @@ class Sosem : UIViewController {
     }
 
 }
+
+
+class VideoController : UIView {
+    
+    private var viewController: UIViewController? = nil
+    
+    private var player:AVPlayer? = nil
+    private var onClose:(()->Void?)? = nil
+   
+    private lazy var playerController: AVPlayerViewController = {
+            let playerController = AVPlayerViewController()
+            playerController.player = player
+            playerController.delegate = self
+            playerController.allowsPictureInPicturePlayback = true
+            return playerController
+    }()
+    override init (frame: CGRect){
+
+        super.init(frame: frame)
+    }
+
+
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    func setupValues (viewController: UIViewController,  url : URL , onClose : @escaping () -> Void) {
+      self.viewController = viewController
+
+        self.player = AVPlayer(url : url)
+        self.onClose = onClose
+    }
+
+    func mount (){
+      self.viewController?.addChild(playerController)
+      self.addSubview(self.playerController.view)
+      player?.play()
+    }
+
+    func play () {
+        player?.play()
+        viewController?.present(playerController, animated: true, completion: nil)
+    }
+    
+    
+}
+
+
+// MARK: - AVPlayerViewControllerDelegate -
+extension VideoController: AVPlayerViewControllerDelegate {
+    func playerViewController(_ playerViewController: AVPlayerViewController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+        completionHandler(true)
+    }
+    
+    func playerViewControllerShouldAutomaticallyDismissAtPictureInPictureStart(_ playerViewController: AVPlayerViewController) -> Bool {
+        return false
+    }
+    
+    func playerViewController(_ playerViewController: AVPlayerViewController, willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+       // self.onClose()
+    }
+}
+ 
