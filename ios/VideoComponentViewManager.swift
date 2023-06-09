@@ -34,7 +34,7 @@ class VideoComponentView : UIView {
     }
   }
 
-
+  @objc var onCloseVideo : RCTDirectEventBlock?
 
 
   weak var viewController: UIViewController?
@@ -86,6 +86,7 @@ class VideoComponentView : UIView {
       if(_urlVideo.count > 0){
         let currentViewController = VideoViewController()
         currentViewController.setVideoUrl(url:_urlVideo)
+        currentViewController.setOnClose(onCloseCallback: onCloseVideo)
         parentVC.addChild(currentViewController)
         addSubview(currentViewController.view)
         currentViewController.view.frame = bounds
@@ -115,10 +116,8 @@ class VideoViewController : UIViewController {
     private var video:VideoController? = nil
     
     private var videoUrl: String?
-    
-    private func onClose () {
-        print("hello world")
-    }
+
+    private var onCloseVideo : RCTDirectEventBlock?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,7 +126,7 @@ class VideoViewController : UIViewController {
         guard let url = URL(string:videoUrl ?? "") else { return }
         
         video = VideoController()
-        video?.setupValues(viewController: self, url: url, onClose: self.onClose)
+        video?.setupValues(viewController: self, url: url, onClose: self.onCloseVideo)
         self.view.addSubview(video!)
       
     }
@@ -142,6 +141,12 @@ class VideoViewController : UIViewController {
         videoUrl = url
     }
 
+    func setOnClose ( onCloseCallback : RCTDirectEventBlock?) {
+      if let onCloseCallback = onCloseCallback {
+        onCloseVideo = onCloseCallback
+      }
+    }
+
 }
 
 
@@ -150,7 +155,7 @@ class VideoController : UIView {
     private var viewController: UIViewController? = nil
     
     private var player:AVPlayer? = nil
-    private var onClose:(()->Void?)? = nil
+    private var onClose:RCTDirectEventBlock?
    
     private lazy var playerController: AVPlayerViewController = {
             let playerController = AVPlayerViewController()
@@ -170,11 +175,15 @@ class VideoController : UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setupValues (viewController: UIViewController,  url : URL , onClose : @escaping () -> Void) {
+    func setupValues (viewController: UIViewController,  url : URL , onClose : RCTDirectEventBlock?) {
       self.viewController = viewController
 
         self.player = AVPlayer(url : url)
-        self.onClose = onClose
+
+        if let onClose = onClose {
+          self.onClose = onClose
+        }
+        
     }
 
     func mount (){
@@ -203,7 +212,10 @@ extension VideoController: AVPlayerViewControllerDelegate {
     }
     
     func playerViewController(_ playerViewController: AVPlayerViewController, willEndFullScreenPresentationWithAnimationCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-       // self.onClose()
+      if let callback = self.onClose {
+        let event = [AnyHashable: Any]()
+        callback(event)
+      }
     }
 }
  
